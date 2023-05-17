@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  mysql-paint-finder:
+    container_name: mysql-paint-finder
+    image: mysql
+    ports:
+      - 3306:3306
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=hicoders_12
+      - MYSQL_PASSWORD=hicoders_12
+      - MYSQL_USER=hicoders
+      - MYSQL_DATABASE=paint-finder
+    volumes:
+      - ./mysqlDB:/var/lib/meinsql/data
+  phpmyadmin-paint-finder:
+    container_name: phpmyadmin-paint-finder
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8080:80
+    depends_on:
+      - mysql-paint-finder
+    environment:
+      PMA_HOST: mysql-paint-finder
+    restart: always

@@ -1,12 +1,11 @@
 import express from "express";
 import nodemailer from "nodemailer";
 import userRepository from "../repository/user-repository.js";
-// import jwtCheck from "../config/auth0.js";
 
 const router = express.Router();
 
 // Get all users
-router.get("/", async (req, res) => {
+router.get("/users", async (req, res) => {
   try {
     const users = await userRepository.getUsers();
     return res.status(200).send(users);
@@ -27,7 +26,7 @@ router.get("/profile/:email", async (req, res) => {
 });
 
 // Create a new user
-router.post("/", async (req, res, next) => {
+router.post("/users", async (req, res, next) => {
   try {
     const { email, firstName, lastName, birthday } = req.body;
     const newUser = { firstName, email, lastName, birthday };
@@ -46,7 +45,7 @@ router.post("/", async (req, res, next) => {
 });
 
 // Delete a users by id
-router.delete("/:id", async (req, res, next) => {
+router.delete("/users/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
     const user = await userRepository.deleteUserById(id);
@@ -60,7 +59,7 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
-router.put("/", async (req, res, next) => {
+router.put("/users/:id", async (req, res, next) => {
   try {
     const updatedUsers = await userRepository.updatedUsers(req.body);
     res.json(updatedUsers);

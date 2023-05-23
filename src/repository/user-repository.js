@@ -10,6 +10,7 @@ const getUsers = async () => {
 };
 
 const getUserByEmail = async (pEmail) => {
+  console.log("engin");
   try {
     const user = await User.findOne({
       where: {

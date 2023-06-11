@@ -1,28 +1,36 @@
 import sequelize from "../config/connection.js";
 import { DataTypes } from "sequelize";
 
-const Paint = sequelize.define(
-  "Paint",
+const Yacht = sequelize.define(
+  "Yacht",
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    brand: {
+    boatName: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    type: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    paintName: {
+    selectedType: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    material: {
+    selectedMaterial: {
       type: DataTypes.STRING,
+      allowNull: false,
+    },
+    selectedSpeed: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    boatLenght: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    boatDraft: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     season: {
@@ -33,19 +41,11 @@ const Paint = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    description: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    maxSpeed: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
   },
   {
-    tableName: "paints",
+    tableName: "yachts",
     timestamps: false,
   }
 );
 
-export default Paint;
+export default Yacht;

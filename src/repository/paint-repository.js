@@ -41,11 +41,22 @@ const createPaint = async (pPaint) => {
 };
 
 const deletePaintById = async (pPaintId) => {
-  return await Paint.destroy({
-    where: {
-      id: pPaintId,
-    },
-  });
+  try {
+    const deletedPaint = await Paint.destroy({
+      where: {
+        id: pPaintId,
+      },
+    });
+
+    if (deletedPaint) {
+      return deletedPaint; // Silinen boyayı geri döndür
+    } else {
+      throw new Error(`Failed to delete paint with id ${pPaintId}`);
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 const changePaintInfo = async (
@@ -58,6 +69,8 @@ const changePaintInfo = async (
         brand,
         paintName,
         material,
+        season,
+        budget,
         description,
         maxSpeed,
       },
@@ -65,6 +78,8 @@ const changePaintInfo = async (
         where: { id: pPaintId },
       }
     );
+    const updatedPaint = await Paint.findByPk(pPaintId); // Güncellenen boya kaydını yeniden sorgula
+    return updatedPaint;
     console.log(result); // Prints the updated paint
   } catch (error) {
     console.error(error);

@@ -1,10 +1,10 @@
 // import Comment from "../model/comment-model.js";
-// import Paint from "../model/paint-model.js";
-// import User from "../model/user-model.js";
+import Yacht from "../model/yacht-model.js";
+import User from "../model/user-model.js";
 import sequelize from "./connection.js";
 
-// User.hasMany(Paint, { foreignKey: "userId", onDelete: "CASCADE" }); //foreignKey is used to name the foreign key, if you remove it userId will be named as UserId automatically, which is generated automatically by sequelize
-// Paint.belongsTo(User, { foreignKey: "userId" });
+User.hasMany(Yacht, { foreignKey: "userId", onDelete: "CASCADE" }); //foreignKey is used to name the foreign key, if you remove it userId will be named as UserId automatically, which is generated automatically by sequelize
+Yacht.belongsTo(User, { foreignKey: "userId" });
 
 // Post.hasMany(Comment, { foreignKey: 'postId' });
 // Comment.belongsTo(Post, { foreignKey: 'postId' });

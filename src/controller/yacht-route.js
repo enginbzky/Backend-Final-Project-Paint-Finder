@@ -27,6 +27,7 @@ router.get("/selectedPaints", async (req, res) => {
 
 router.post("/savePaintData", async (req, res, next) => {
   try {
+    const email = req.query.email;
     const {
       boatName,
       boatLength,
@@ -46,9 +47,10 @@ router.post("/savePaintData", async (req, res, next) => {
       season,
       selectedSpeed,
       budget,
-      userId: req.user.id,
     };
-    const yacht = await yachtRepository.createYachtData(newYacht);
+    console.log(newYacht);
+    const yacht = await yachtRepository.addYacht(email, newYacht);
+
     // await notifyPaint(paint.paintName);
     return res.status(201).send(yacht);
   } catch (error) {

@@ -11,7 +11,7 @@ const Yacht = sequelize.define(
     },
     boatName: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
     },
     selectedType: {
       type: DataTypes.STRING,
@@ -25,13 +25,13 @@ const Yacht = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    boatLenght: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
+    boatLength: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     boatDraft: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     season: {
       type: DataTypes.STRING,

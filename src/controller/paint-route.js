@@ -1,7 +1,26 @@
 import express from "express";
 import paintRepository from "../repository/paint-repository.js";
+import { uploadImage } from "../service/paint.service.js";
+import multer from "multer";
+import { v4 as uuidv4 } from "uuid";
 
 const router = express.Router();
+
+const upload = multer();
+
+// router.post ('/paintImages/:paintId/image/', upload.single('paintImage'), async (req, res)=>{
+//   try{
+//     const paintId =req.params.paintId;
+//     const paintImage = req.file;
+
+//     const paint = await updateImage(paintId, paintImage);
+
+//     res.status(201).json(paint);
+//   } catch (err){
+//     console.error(err);
+//     res.status(500).send();
+//   }
+// })
 
 // Get all paints
 router.get("/paints", async (req, res) => {
@@ -25,29 +44,51 @@ router.get("/paints/:id", async (req, res) => {
 });
 
 // Create a new paint
-router.post("/paints", async (req, res, next) => {
+router.post("/paints", upload.single("paintImage"), async (req, res, next) => {
   try {
     const {
       paintName,
+      type,
       brand,
       material,
       season,
       budget,
       description,
       maxSpeed,
-    } = req.body;
+    } = JSON.parse(req.body.paint);
+    // console.log(
+    //   "aaaaaaaaaaAAAAAAEBBBE",
+    //   JSON.parse(req.body.paint),
+    //   req.body.paint.paintName
+    // );
+    const paintImage = req.file;
+
+    if (!paintImage) {
+      return res.status(400).send({ message: "Missing paint image" });
+    }
+
     const newPaint = {
       brand,
+      type,
       paintName,
       season,
       budget,
       material,
       description,
       maxSpeed,
+      image: "test",
     };
-    const paint = await paintRepository.createPaint(newPaint);
+
+    try {
+      const savedFile = await uploadImage(uuidv4(), paintImage);
+      newPaint.image = savedFile.Location;
+      const paint = await paintRepository.createPaint(newPaint);
+      return res.status(201).send(paint);
+    } catch (error) {
+      console.log("BURDAMISINNNNN ERROR", error);
+    }
+
     // await notifyPaint(paint.paintName);
-    return res.status(201).send(paint);
   } catch (error) {
     if (error.name === "ValidationError") {
       return res.status(400).send({ message: "Invalid paint input" });

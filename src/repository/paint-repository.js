@@ -3,6 +3,7 @@ import Paint from "../model/paint-model.js";
 const getPaints = async () => {
   try {
     const paints = await Paint.findAll();
+    console.log(paints);
     return paints;
   } catch (error) {
     throw new Error("error while getting paints");
@@ -24,6 +25,10 @@ const getPaintById = async (pId) => {
 
 const createPaint = async (pPaint) => {
   try {
+    if (!pPaint.paintName) {
+      throw new Error("Paint name is required"); // Ekledim, paintName boş ise hata fırlatıyoruz
+    }
+
     // Check if paint with provided paintName already exists
     const existingPaint = await Paint.findOne({
       where: { paintName: pPaint.paintName },
@@ -32,7 +37,9 @@ const createPaint = async (pPaint) => {
       throw new Error("Paint with this paint name already exists");
     }
     // Create new user if email does not exist
+
     const newPaint = await Paint.create(pPaint);
+    console.log("AABBB********1111**", newPaint);
     return newPaint;
   } catch (error) {
     console.log(error);
@@ -61,18 +68,21 @@ const deletePaintById = async (pPaintId) => {
 
 const changePaintInfo = async (
   pPaintId,
-  { brand, paintName, material, description, maxSpeed }
+  pPaintImagePath,
+  { brand, type, paintName, material, season, budget, description, maxSpeed }
 ) => {
   try {
     const result = await Paint.update(
       {
         brand,
+        type,
         paintName,
         material,
         season,
         budget,
         description,
         maxSpeed,
+        image: pPaintImagePath,
       },
       {
         where: { id: pPaintId },

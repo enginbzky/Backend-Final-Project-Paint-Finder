@@ -1,5 +1,6 @@
 import Paint from "../model/paint-model.js";
 import Yacht from "../model/yacht-model.js";
+import User from "../model/user-model.js";
 
 const getProperPaint = async (selectedOptions) => {
   try {
@@ -22,17 +23,37 @@ const getProperPaint = async (selectedOptions) => {
   }
 };
 
-const createYachtData = async (pYacht) => {
+// const createYachtData = async (pYacht) => {
+//   try {
+//     // Check if paint with provided paintName already exists
+//     const existingYacht = await Yacht.findOne({
+//       where: { boatName: pYacht.boatName },
+//     });
+//     if (existingYacht) {
+//       throw new Error("The Yacht with this name already exists");
+//     }
+//     // Create new yacht if yacht does not exist
+//     const newYacht = await Yacht.create({ ...pYacht, UserId: pYacht.userId });
+//     return newYacht;
+//   } catch (error) {
+//     console.log(error);
+//     throw error;
+//   }
+// };
+
+const addYacht = async (email, yachtData) => {
+  console.log("addYacht");
+  console.log(yachtData);
   try {
-    // Check if paint with provided paintName already exists
-    const existingYacht = await Yacht.findOne({
-      where: { boatName: pYacht.boatName },
-    });
-    if (existingYacht) {
-      throw new Error("The Yacht with this name already exists");
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      throw new Error("User not found");
     }
-    // Create new yacht if yacht does not exist
-    const newYacht = await Yacht.create(pYacht);
+
+    const newYacht = await Yacht.create(yachtData);
+
+    await user.addYacht(newYacht);
+
     return newYacht;
   } catch (error) {
     console.log(error);
@@ -40,4 +61,4 @@ const createYachtData = async (pYacht) => {
   }
 };
 
-export default { getProperPaint, createYachtData };
+export default { getProperPaint, addYacht };

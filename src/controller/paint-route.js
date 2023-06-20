@@ -3,6 +3,7 @@ import paintRepository from "../repository/paint-repository.js";
 import { uploadImage } from "../service/paint.service.js";
 import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
+import Paint from "../model/paint-model.js";
 
 const router = express.Router();
 
@@ -129,5 +130,20 @@ router.put("/paints/:id", async (req, res, next) => {
     next(error);
   }
 });
+
+// router.get("/paints/checkPaintExists/:paintName", async (req, res, next) => {
+//   try {
+//     const { paintName } = req.params;
+
+//     // Veritabanında paintName'i kontrol etmek için gerekli kod
+//     const existingPaint = await Paint.findOne({ where: { paintName } });
+//     const exists = !!existingPaint;
+
+//     res.status(200).json({ exists });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Paint existence check failed" });
+//   }
+// });
 
 export default router;

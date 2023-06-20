@@ -26,11 +26,11 @@ const Yacht = sequelize.define(
       allowNull: false,
     },
     boatLength: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     boatDraft: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     season: {
@@ -38,6 +38,14 @@ const Yacht = sequelize.define(
       allowNull: false,
     },
     budget: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    brand: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    paintName: {
       type: DataTypes.STRING,
       allowNull: false,
     },

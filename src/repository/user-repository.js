@@ -23,6 +23,18 @@ const getUserByEmail = async (pEmail) => {
   }
 };
 
+const getUserIdByEmail = async (email) => {
+  try {
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return user.id;
+  } catch (error) {
+    throw new Error("Error retrieving user ID");
+  }
+};
+
 const createUser = async (pUser) => {
   try {
     // Check if user with provided email already exists
@@ -60,6 +72,7 @@ const updatedUsers = async (users) => {
 
 export default {
   getUsers,
+  getUserIdByEmail,
   createUser,
   deleteUserById,
   getUserByEmail,

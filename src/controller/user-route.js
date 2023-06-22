@@ -25,6 +25,16 @@ router.get("/profile/:email", async (req, res) => {
   }
 });
 
+router.get("/users/userId", async (req, res) => {
+  try {
+    const email = req.query.email;
+    const userId = await userRepository.getUserIdByEmail(email);
+    return res.status(200).send({ userId });
+  } catch (error) {
+    return res.status(500).send({ message: "Error fetching user id" });
+  }
+});
+
 // Create a new user
 router.post("/users", async (req, res, next) => {
   try {
@@ -71,7 +81,7 @@ router.put("/users/:id", async (req, res, next) => {
 
 async function notifyUser(pEmail) {
   const transporter = nodemailer.createTransport({
-    host: "gmail",
+    host: "smtp.gmail.com",
     port: 465,
     secure: true,
     auth: {

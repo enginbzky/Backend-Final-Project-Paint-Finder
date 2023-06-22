@@ -4,6 +4,7 @@ import { uploadImage } from "../service/paint.service.js";
 import multer from "multer";
 import { v4 as uuidv4 } from "uuid";
 import Paint from "../model/paint-model.js";
+import { downloadFile } from "../service/object.strorage.service.js";
 
 const router = express.Router();
 
@@ -57,11 +58,6 @@ router.post("/paints", upload.single("paintImage"), async (req, res, next) => {
       description,
       maxSpeed,
     } = JSON.parse(req.body.paint);
-    // console.log(
-    //   "aaaaaaaaaaAAAAAAEBBBE",
-    //   JSON.parse(req.body.paint),
-    //   req.body.paint.paintName
-    // );
     const paintImage = req.file;
 
     if (!paintImage) {
@@ -131,6 +127,27 @@ router.put("/paints/:id", async (req, res, next) => {
   }
 });
 
+router.get("/paints/:id/image", async (req, res) => {
+  try {
+    const paintId = req.params.id;
+    const paint = await paintRepository.getPaintById(paintId); // paintRepository'de ilgili resmi veritabanından almak için uygun bir fonksiyon kullanın
+
+    if (!paint) {
+      return res.status(404).send("Paint not found");
+    }
+
+    const fileKey = paint.image.split("/").pop(); // Resim URL'sinden dosya anahtarını alın
+
+    const fileStream = downloadFile(fileKey, process.env.AWS_BUCKET_NAME); // Resmi AWS S3'den indirin
+
+    res.setHeader("Content-Disposition", `inline; filename=${fileKey}`);
+    fileStream.pipe(res); // Resim dosyasını tarayıcıya gönderin
+  } catch (err) {
+    console.error(err);
+    res.status(500).send();
+  }
+});
+
 // router.get("/paints/checkPaintExists/:paintName", async (req, res, next) => {
 //   try {
 //     const { paintName } = req.params;
@@ -143,6 +160,24 @@ router.put("/paints/:id", async (req, res, next) => {
 //   } catch (error) {
 //     console.error(error);
 //     res.status(500).json({ error: "Paint existence check failed" });
+//   }
+// });
+
+// router.get("/:id/download", async (req, res) => {
+//   try {
+//     const customer = await customerService.getUser(req.params.id);
+//     if (!customer) {
+//       return res.status(404).send("User not found");
+//     }
+//     const fileKey = customer.profileImagePath.split("/").pop();
+//     const fileStream = s3Service.downloadFile(
+//       fileKey,
+//       process.env.AWS_BUCKET_NAME
+//     );
+//     fileStream.pipe(res);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send();
 //   }
 // });
 

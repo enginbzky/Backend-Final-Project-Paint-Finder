@@ -61,4 +61,13 @@ const addYacht = async (email, yachtData) => {
   }
 };
 
-export default { getProperPaint, addYacht };
+const getYachtByUserId = async (userId) => {
+  try {
+    const yacht = await Yacht.findAll({ where: { userId } });
+    return yacht;
+  } catch (error) {
+    throw new Error("Error retrieving yacht data");
+  }
+};
+
+export default { getProperPaint, addYacht, getYachtByUserId };

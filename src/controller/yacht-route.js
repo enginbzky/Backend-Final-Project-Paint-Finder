@@ -68,4 +68,16 @@ router.post("/savePaintData", async (req, res, next) => {
   }
 });
 
+router.get("/yachts/hola/:userId", async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    console.log("BEN LALULALULALULA", userId);
+    const yacht = await yachtRepository.getYachtByUserId(userId);
+    console.log(yacht);
+    return res.status(200).send({ yacht });
+  } catch (error) {
+    return res.status(500).send({ message: "Error fetching yacht id" });
+  }
+});
+
 export default router;

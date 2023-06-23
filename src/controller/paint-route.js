@@ -10,20 +10,6 @@ const router = express.Router();
 
 const upload = multer();
 
-// router.post ('/paintImages/:paintId/image/', upload.single('paintImage'), async (req, res)=>{
-//   try{
-//     const paintId =req.params.paintId;
-//     const paintImage = req.file;
-
-//     const paint = await updateImage(paintId, paintImage);
-
-//     res.status(201).json(paint);
-//   } catch (err){
-//     console.error(err);
-//     res.status(500).send();
-//   }
-// })
-
 // Get all paints
 router.get("/paints", async (req, res) => {
   try {

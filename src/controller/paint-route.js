@@ -112,20 +112,66 @@ router.delete("/paints/:id", async (req, res, next) => {
   }
 });
 
-router.put("/paints/:id", async (req, res, next) => {
-  try {
-    const paintId = req.params.id;
-    const aPaint = req.body;
-    const changePaintInfo = await paintRepository.changePaintInfo(
-      paintId,
-      aPaint
-    );
-    res.status(200).json(changePaintInfo);
-  } catch (error) {
-    console.log(error);
-    next(error);
+router.put(
+  "/paints/degis/:id",
+  upload.single("paintImage"),
+  async (req, res, next) => {
+    try {
+      const paintId = req.params.id;
+      const {
+        paintName,
+        type,
+        brand,
+        material,
+        season,
+        budget,
+        description,
+        maxSpeed,
+      } = JSON.parse(req.body.paint);
+      const paintImage = req.file;
+      console.log("image bakiyom ben ", paintImage);
+      if (!paintImage) {
+        return res.status(400).send({ message: "Missing paint image" });
+      }
+
+      const updatedPaint = {
+        brand,
+        type,
+        paintName,
+        season,
+        budget,
+        material,
+        description,
+        maxSpeed,
+        imagePath: "test", // Önceden belirlenmiş bir değer
+      };
+
+      try {
+        const savedFile = await uploadImage(uuidv4(), paintImage);
+        updatedPaint.imagePath = savedFile.Location; // Güncellenmiş resim URL'sini atama
+        const paint = await paintRepository.changePaintInfo(
+          paintId,
+          updatedPaint
+        );
+        return res.status(200).send(paint);
+      } catch (error) {
+        console.log("BURDAMISINNNNN ERROR", error);
+      }
+
+      // await notifyPaint(updatedPaint.paintName);
+    } catch (error) {
+      if (error.name === "ValidationError") {
+        return res.status(400).send({ message: "Invalid paint input" });
+      } else if (
+        error.message === "Paint with this paint name already exists"
+      ) {
+        return next({ message: "A paint with this paint already exists" });
+      } else {
+        return next(error);
+      }
+    }
   }
-});
+);
 
 router.get("/paints/:id/image", async (req, res) => {
   try {

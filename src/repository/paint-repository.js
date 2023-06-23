@@ -66,33 +66,45 @@ const deletePaintById = async (pPaintId) => {
   }
 };
 
-const changePaintInfo = async (
-  pPaintId,
-  pPaintImagePath,
-  { brand, type, paintName, material, season, budget, description, maxSpeed }
-) => {
+const changePaintInfo = async (paintId, paintData) => {
   try {
-    const result = await Paint.update(
-      {
-        brand,
-        type,
-        paintName,
-        material,
-        season,
-        budget,
-        description,
-        maxSpeed,
-        image: pPaintImagePath,
-      },
-      {
-        where: { id: pPaintId },
-      }
-    );
-    const updatedPaint = await Paint.findByPk(pPaintId); // Güncellenen boya kaydını yeniden sorgula
-    return updatedPaint;
-    console.log(result); // Prints the updated paint
+    const {
+      brand,
+      type,
+      paintName,
+      material,
+      season,
+      budget,
+      description,
+      maxSpeed,
+      imagePath,
+    } = paintData;
+
+    const updatedPaint = {
+      brand,
+      type,
+      paintName,
+      material,
+      season,
+      budget,
+      description,
+      maxSpeed,
+      image: imagePath, // URL'yi güncellenmiş image alanına atıyoruz
+    };
+
+    const [rowsUpdated] = await Paint.update(updatedPaint, {
+      where: { id: paintId },
+    });
+
+    if (rowsUpdated === 0) {
+      throw new Error("Paint not found");
+    }
+
+    const updatedPaintData = await Paint.findByPk(paintId);
+    return updatedPaintData;
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 
